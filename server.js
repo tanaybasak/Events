@@ -8,8 +8,6 @@ var cookieParser = require('cookie-parser');
  var app = express();
 
 
-//set port 
-app.set('port',(process.env.PORT || 4200))
 
 
  //View Engine
@@ -41,6 +39,6 @@ app.use('/api',login);
 
 //app.use(cors());
 //server
-app.listen(app.get('port'),function(){
-    console.log("Node app is running on port", app.get('port'));
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
