@@ -76,7 +76,7 @@ router.post('/register', function (req, res, next) {
                     res.json({ "error": err });
                 }
 
-                res.send(JSON.stringify({ "status": "saved in database" }));
+                res.json({ "status": "saved in database" });
             });
 
             lengthofarray++;
@@ -102,7 +102,7 @@ router.post('/register', function (req, res, next) {
                         }
                         lengthofarray++;
 
-                        res.send(JSON.stringify({ "status": "saved in database" }));
+                        res.json({ "status": "saved in database" });
 
                     });
                 }
