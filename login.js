@@ -5,6 +5,15 @@ const mongojs = require('mongojs');
 var db = mongojs('mongodb://tanay02:ibanez01@ds161426.mlab.com:61426/event',['users']);
 
 
+
+//global header
+
+
+
+
+
+
+
 //retrieving data
 
 router.get('/login', function (req, res, next) {
@@ -44,53 +53,67 @@ router.get('/login', function (req, res, next) {
 //add data
 
 router.post('/register', function (req, res, next) {
+
+ 
+    var i = 0;
+
     db.users.find({}, function (err, log) {
+
 
         if (err) {
             res.send(err);
         }
 
-      
-        if ( log.length == 0) {
-           
-            db.users.save({ "firstname": req.body.firstname, "lastname": req.body.lastname, "id": req.body.email }, function (err, log) {
+        var array = log;
+        var lengthofarray = array.length;
+        if (lengthofarray == 0) {
+
+            console.log("HELLO");
+            db.users.save({ "firstname": req.body.firstname, "lastname": req.body.lastname,"id": req.body.email }, function (err, log) {
 
                 if (err) {
 
                     res.json({ "error": err });
                 }
 
-                return res.json(JSON.stringify({ "status": "saved in database" }));
+                res.send(JSON.stringify({ "status": "saved in database" }));
             });
 
-
+            lengthofarray++;
         }
 
         else {
-            
-                    for(i=0;i<log.length;i++)
-                    {
-                        
-                if (log[i]["id"].toString() !== (req.body.email)) {
 
-                    console.log(log[i]["id"].toString());
-                    found=1;
+            if (i < lengthofarray) {
+
+                if (array[i]["id"].toString() !== req.body.email) {
+
+                    console.log(array[i]["id"].toString());
+
+                    //save
+
+                    db.users.save({ "firstname": req.body.firstname, "lastname": req.body.lastname, "id": req.body.email }, function (err, log) {
+
+                        if (err) {
+
+                            res.send(err);
+
+                            return;
+                        }
+                        lengthofarray++;
+
+                        res.send(JSON.stringify({ "status": "saved in database" }));
+
+                    });
                 }
                 else {
                     res.json({ "status": "user exists" });
                 }
-             
+                i++;
             }
-        if(found == 1)
-        {
-               db.users.save({ "firstname": req.body.firstname, "lastname": req.body.lastname, "id": req.body.email }, function (err, log) {
-
-        if (err) {  res.send(err);   }
-                       return res.json(JSON.stringify({ "status": "saved in database" }));
-
-                    });
         }
-        }
+
+
     })
 
 });
